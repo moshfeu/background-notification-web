@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>bg notification test</title>
+</head>
+
+<body>
+  <button onclick="sendMessage()">Send message</button>
+  <script>
+    let se;
+    const registration = navigator.serviceWorker.register('/sw.js').then(data => {
+      se = data.active;
+      console.log('ready');
+    });
+
+    function sendMessage() {
+      se.postMessage('message from client');
+    }
+  </script>
+</body>
+
+</html>
