@@ -9,7 +9,8 @@
 </head>
 
 <body>
-  <button onclick="sendMessage()">Send message</button>
+  <button onclick="sendMessage('start')">Start Listen</button>
+  <button onclick="sendMessage('stop')">Stop Listen</button>
   <script>
     let se;
     const registration = navigator.serviceWorker.register('/sw.js').then(data => {
@@ -17,8 +18,8 @@
       console.log('ready');
     });
 
-    function sendMessage() {
-      se.postMessage('message from client');
+    function sendMessage(message) {
+      se.postMessage(message);
     }
   </script>
 </body>
