@@ -11,16 +11,20 @@
 <body>
   <button onclick="sendMessage('start')">Start Listen</button>
   <button onclick="sendMessage('stop')">Stop Listen</button>
+  <button onclick="sendMessage('notification')">Send a Notification</button>
   <script>
     let se;
-    const registration = navigator.serviceWorker.register('/sw.js').then(data => {
+    navigator.serviceWorker.register('/sw.js').then(data => {
       se = data.active;
-      console.log('ready');
     });
 
     function sendMessage(message) {
       se.postMessage(message);
     }
+
+    Notification.requestPermission().then(registration => {
+      console.log(registration);
+    });
   </script>
 </body>
 
