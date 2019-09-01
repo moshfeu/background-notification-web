@@ -1,7 +1,7 @@
 let interval;
+let cache = [];
 
 self.addEventListener('notificationclick', function(event) {
-  console.log('On notification click: ', event.notification.tag);
   event.notification.close();
 
   event.waitUntil(clients.matchAll({
@@ -21,7 +21,14 @@ self.addEventListener('notificationclick', function(event) {
 
 function startListen() {
   interval = setInterval(() => {
-    console.log(Date.now());
+    fetch('http://localhost:3000')
+      .then(data => data.json())
+      .then(data => {
+        if (data.some(i => !cache.includes(i._id))) {
+          sendNotification();
+          cache = data.map(u => u._id);
+        }
+      });
   }, 1000);
 }
 
@@ -29,14 +36,12 @@ function stopListen() {
   clearInterval(interval);
 }
 
-function sendTestNotification() {
-  setTimeout(() => {
-    self.registration.showNotification(`I'm a notification from the service worker!!`, {
-      body: 'How cool is that?',
-      icon: '',
-      tag: '',
-    });
-  }, 1000);
+function sendNotification() {
+  self.registration.showNotification(`New user!`, {
+    body: 'Click to go to approval panel',
+    icon: '',
+    tag: '',
+  });
 }
 
 self.addEventListener('message', ({data}) => {
@@ -46,9 +51,6 @@ self.addEventListener('message', ({data}) => {
       break;
     case 'stop':
       stopListen();
-      break;
-    case 'notification':
-      sendTestNotification();
       break;
   }
 });

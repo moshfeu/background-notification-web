@@ -11,7 +11,6 @@
 <body>
   <button onclick="sendMessage('start')">Start Listen</button>
   <button onclick="sendMessage('stop')">Stop Listen</button>
-  <button onclick="sendMessage('notification')">Send a Notification</button>
   <script>
     let se;
     navigator.serviceWorker.register('/sw.js').then(data => {
