@@ -1,5 +1,24 @@
 let interval;
 
+self.addEventListener('notificationclick', function(event) {
+  console.log('On notification click: ', event.notification.tag);
+  event.notification.close();
+
+  event.waitUntil(clients.matchAll({
+    type: 'window'
+  }).then(function(clientList) {
+    if (clientList.length) {
+      const [client] = clientList;
+
+      if ('focus' in client) {
+        return client.focus();
+      } else if (clients.openWindow) {
+        return clients.openWindow('/#notification');
+      }
+    }
+  }));
+});
+
 function startListen() {
   interval = setInterval(() => {
     console.log(Date.now());
@@ -15,9 +34,9 @@ function sendTestNotification() {
     self.registration.showNotification(`I'm a notification from the service worker!!`, {
       body: 'How cool is that?',
       icon: '',
-      tag: ''
+      tag: '',
     });
-  }, 5000);
+  }, 1000);
 }
 
 self.addEventListener('message', ({data}) => {

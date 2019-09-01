@@ -16,9 +16,14 @@
     let se;
     navigator.serviceWorker.register('/sw.js').then(data => {
       se = data.active;
+      console.log('se ready!');
     });
 
     function sendMessage(message) {
+      if (!se) {
+        console.log('sw is not ready yet');
+        return;
+      }
       se.postMessage(message);
     }
 
